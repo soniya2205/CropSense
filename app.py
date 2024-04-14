@@ -48,7 +48,7 @@ def service():
     return render_template('service.html')
 
 # Contact page route
-@app.route('/contact', methods=['GET', 'POST'])
+@app.route('/contact', methods=['GET','POST'])
 def contact():
     if request.method == 'POST':
         return render_template('contact.html')
