@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import requests
 import config
+import pickle
 
 def weather_fetch(city_name):
     """
@@ -30,6 +31,12 @@ def weather_fetch(city_name):
         return None
     
 app = Flask(__name__)
+
+# Loading crop recommendation model
+
+crop_recommendation_model_path = 'models/RandomForest.pkl'
+crop_recommendation_model = pickle.load(
+    open(crop_recommendation_model_path, 'rb'))
 
 @ app.route('/')
 def home():
