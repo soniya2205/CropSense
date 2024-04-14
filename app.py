@@ -80,7 +80,7 @@ def crop_prediction():
             my_prediction = crop_recommendation_model.predict_crop(data)
             final_prediction = my_prediction[0]
 
-            return render_template('crop-result.html', prediction=final_prediction, title=title)
+            return render_template('crop-result.html', prediction=final_prediction, pred='images/crop/'+final_prediction+'.jpg')
 
         else:
 
@@ -94,7 +94,7 @@ def fertilizer_recommendation():
 
 @ app.route('/fertilizer-predict', methods=['POST'])
 def fert_recommend():
-    title = 'Harvestify - Fertilizer Suggestion'
+    title = 'CropSense - Fertilizer Suggestion'
 
     crop_name = str(request.form['cropname'])
     N = int(request.form['nitrogen'])

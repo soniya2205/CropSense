@@ -17,7 +17,11 @@
   <div class="row">
     <div class="col-sm py-2 py-md-3">
       <div class="card card-body" style="justify-content: center;">
-        <h1 class="text-center"><b>You should grow <i>{{ prediction }}</i> in your farm</b></h1>
+        <h1 class="text-center" style="margin-top:5%;">
+          <b>You should grow <span class="gold-text"><i> {{ prediction }} </i></span>in your farm</b>
+          <br><br>
+          <img src="{{url_for('static',filename=pred)}}" width="780px" height="450px" alt={{prediction}}>
+      </h1>
       </div>
     </div>
   </div>
