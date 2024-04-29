@@ -1,7 +1,9 @@
+
 from flask import Flask, render_template, request
 from notebooks import crop_recommendation_model
 from utils.fertilizer import fertilizer_dic
 from markupsafe import Markup
+from sklearn.metrics import accuracy_score
 import numpy as np
 import pandas as pd
 import requests
@@ -38,16 +40,27 @@ crop_recommendation_model_path = 'models/RandomForest.pkl'
 crop_recommendation_model = pickle.load(
     open(crop_recommendation_model_path, 'rb'))
 
+# Home page
 @ app.route('/')
 def home():
     title = 'CropSense - Home'
     return render_template('index.html', title=title)
 
-
 # About page route
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+# Product page route
+crops = [
+    'Rice', 'Maize', 'Chickpea', 'Kidneybeans', 'Pigeonpeas',
+    'Mothbeans', 'Mungbean', 'Blackgram', 'Lentil', 'Cotton',
+    'Jute', 'Coffee', 'Pomegranate', 'Banana', 'Mango', 'Grapes',
+    'Watermelon', 'Muskmelon', 'Apple', 'Orange', 'Papaya', 'Coconut'
+]
+@app.route('/product')
+def product():
+    return render_template('product.html', crops=crops)
 
 #Service page route
 @app.route('/service')
@@ -61,11 +74,13 @@ def contact():
         return render_template('contact.html')
     else:
         return render_template('contact.html')
-
+    
+# Crop Page
 @ app.route('/crop-recommend')
 def crop_recommend():
-    title = 'Harvestify - Crop Recommendation'
+    title = 'CropSense - Crop Recommendation'
     return render_template('crop.html', title=title)
+
 
 @ app.route('/crop-predict', methods=['POST'])
 def crop_prediction():
@@ -84,18 +99,20 @@ def crop_prediction():
         if weather_fetch(city) != None:
             temperature, humidity = weather_fetch(city)
             data = np.array([[N, P, K, temperature, humidity, ph, rainfall]])
-            my_prediction = crop_recommendation_model.predict_crop(data)
+            my_prediction = crop_recommendation_model.predict(data)
             final_prediction = my_prediction[0]
 
             return render_template('crop-result.html', prediction=final_prediction, pred='images/crop/'+final_prediction+'.jpg')
+
 
         else:
 
             return render_template('try_again.html', title=title)
         
+# Fertilizer page        
 @ app.route('/fertilizer')
 def fertilizer_recommendation():
-    title = 'Harvestify - Fertilizer Suggestion'
+    title = 'CropSense - Fertilizer Suggestion'
 
     return render_template('fertilizer.html', title=title)
 

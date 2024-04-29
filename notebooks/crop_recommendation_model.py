@@ -111,7 +111,7 @@ score
 """### Saving trained Random Forest model"""
 
 import pickle
-# Dump the trained Naive Bayes classifier with Pickle
+# Dump the trained RF classifier with Pickle
 RF_pkl_filename = 'models\RandomForest.pkl'
 # Open the file to save as pkl file
 RF_Model_pkl = open(RF_pkl_filename, 'wb')

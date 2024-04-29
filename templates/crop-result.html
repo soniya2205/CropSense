@@ -18,9 +18,11 @@
     <div class="col-sm py-2 py-md-3">
       <div class="card card-body" style="justify-content: center;">
         <h1 class="text-center" style="margin-top:5%;">
-          <b>You should grow <span class="gold-text"><i> {{ prediction }} </i></span>in your farm</b>
+          <b>You should grow <span class="gold-text"><i>{{ prediction }}</i></span> in your farm</b>
           <br><br>
-          <img src="{{url_for('static',filename=pred)}}" width="780px" height="450px" alt={{prediction}}>
+          <img src="{{ url_for('static', filename=pred) }}" width="780px" height="450px" alt="{{ prediction }}">
+          <br><br>
+          <p>Accuracy: {{ accuracy }}%</p>
       </h1>
       </div>
     </div>
