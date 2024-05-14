@@ -1,14 +1,15 @@
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,make_response
 from notebooks import crop_recommendation_model
 from utils.fertilizer import fertilizer_dic
 from markupsafe import Markup
-from sklearn.metrics import accuracy_score
 import numpy as np
 import pandas as pd
 import requests
 import config
 import pickle
+
+
 
 def weather_fetch(city_name):
     """
@@ -25,23 +26,20 @@ def weather_fetch(city_name):
 
     if x["cod"] != "404":
         y = x["main"]
-
         temperature = round((y["temp"] - 273.15), 2)
         humidity = y["humidity"]
         return temperature, humidity
     else:
         return None
-    
+
 app = Flask(__name__)
 
 # Loading crop recommendation model
-
 crop_recommendation_model_path = 'models/RandomForest.pkl'
-crop_recommendation_model = pickle.load(
-    open(crop_recommendation_model_path, 'rb'))
+crop_recommendation_model = pickle.load(open(crop_recommendation_model_path, 'rb'))
 
 # Home page
-@ app.route('/')
+@app.route('/')
 def home():
     title = 'CropSense - Home'
     return render_template('index.html', title=title)
@@ -62,27 +60,28 @@ crops = [
 def product():
     return render_template('product.html', crops=crops)
 
-#Service page route
+# Service page route
 @app.route('/service')
 def service():
     return render_template('service.html')
 
 # Contact page route
-@app.route('/contact', methods=['GET','POST'])
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
-        return render_template('contact.html')
+        response = make_response(render_template('contact.html'))
+        response.set_cookie('cookieName', 'cookieValue', samesite='None', secure=True)
+        return response
     else:
         return render_template('contact.html')
     
 # Crop Page
-@ app.route('/crop-recommend')
+@app.route('/crop-recommend')
 def crop_recommend():
     title = 'CropSense - Crop Recommendation'
     return render_template('crop.html', title=title)
 
-
-@ app.route('/crop-predict', methods=['POST'])
+@app.route('/crop-predict', methods=['POST'])
 def crop_prediction():
     title = 'CropSense - Crop Recommendation'
 
@@ -92,31 +91,27 @@ def crop_prediction():
         K = int(request.form['pottasium'])
         ph = float(request.form['ph'])
         rainfall = float(request.form['rainfall'])
-
-        #state = request.form.get("stt")
+        state = request.form.get("stt")
         city = request.form.get("city")
 
-        if weather_fetch(city) != None:
-            temperature, humidity = weather_fetch(city)
+        weather_data = weather_fetch(city)
+        if weather_data is not None:
+            temperature, humidity = weather_data
             data = np.array([[N, P, K, temperature, humidity, ph, rainfall]])
             my_prediction = crop_recommendation_model.predict(data)
             final_prediction = my_prediction[0]
 
             return render_template('crop-result.html', prediction=final_prediction, pred='images/crop/'+final_prediction+'.jpg')
-
-
         else:
-
             return render_template('try_again.html', title=title)
         
 # Fertilizer page        
-@ app.route('/fertilizer')
+@app.route('/fertilizer')
 def fertilizer_recommendation():
     title = 'CropSense - Fertilizer Suggestion'
-
     return render_template('fertilizer.html', title=title)
 
-@ app.route('/fertilizer-predict', methods=['POST'])
+@app.route('/fertilizer-predict', methods=['POST'])
 def fert_recommend():
     title = 'CropSense - Fertilizer Suggestion'
 
@@ -124,7 +119,6 @@ def fert_recommend():
     N = int(request.form['nitrogen'])
     P = int(request.form['phosphorous'])
     K = int(request.form['pottasium'])
-    # ph = float(request.form['ph'])
 
     df = pd.read_csv('Data/fertilizer.csv')
 
@@ -156,7 +150,6 @@ def fert_recommend():
     response = Markup(str(fertilizer_dic[key]))
 
     return render_template('fertilizer-result.html', recommendation=response, title=title)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
