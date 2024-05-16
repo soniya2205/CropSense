@@ -37,9 +37,11 @@
         class="form-control"
         id="Nitrogen"
         name="nitrogen"
-        placeholder="Enter the value (example:50)"
+        placeholder="Enter N value"
         style="font-weight: bold"
         required
+        min="0"
+        max="140" 
       />
     </div>
     <div class="form-group">
@@ -51,9 +53,11 @@
         class="form-control"
         id="Phosphorous"
         name="phosphorous"
-        placeholder="Enter the value (example:50)"
+        placeholder="Enter P value"
         style="font-weight: bold"
         required
+        min="5"
+        max="145" 
       />
     </div>
 
@@ -64,35 +68,41 @@
         class="form-control"
         id="Pottasium"
         name="pottasium"
-        placeholder="Enter the value (example:50)"
+        placeholder="Enter K value"
         style="font-weight: bold"
         required
+        min="5"
+        max="205"
       />
     </div>
     <div class="form-group">
-      <label for="ph" style="font-size: 17px"><b>ph level</b></label>
+      <label for="ph" style="font-size: 17px"><b>pH</b></label>
       <input
         type="number"
         step="0.01"
         class="form-control"
         id="ph"
         name="ph"
-        placeholder="Enter the value"
+        placeholder="Enter pH value (e.g., 3.5-10)"
         style="font-weight: bold"
         required
+        min="3.5"
+        max="10" 
       />
     </div>
     <div class="form-group">
-      <label for="Rainfall" style="font-size: 17px"><b>Rainfall (in mm)</b></label>
+      <label for="Rainfall" style="font-size: 17px"><b>Rainfall</b></label>
       <input
         type="number"
         step="0.01"
         class="form-control"
         id="Rainfall"
         name="rainfall"
-        placeholder="Enter the value"
+        placeholder="Enter Rainfall in mm (e.g., 20-300)"
         style="font-weight: bold"
         required
+        min="20"
+        max="299" 
       />
     </div>
     <div class="form-group">
